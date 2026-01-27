@@ -68,27 +68,15 @@
   <div class="container">
     <div class="title">philthy</div>
     
-<div id="visit-counter">visits: …</div>
+<div id="visit-counter">
+  visits:
+  <img
+    src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://djphilthy.github.io/philthy/&count_bg=%23000000&title_bg=%23000000&icon=&icon_color=%23FFFFFF&title=&edge_flat=true"
+    alt="visits"
+    style="vertical-align: middle;"
+  />
+</div>
 
-<script>
-fetch("https://counterapi.dev/v2/counters/philthy/visits/increment", {
-  method: "POST",
-  headers: {
-    "Authorization": "Bearer ut_PdNcBn8GHw0twidTUJkCBwCd6eZdOYdDM4Xybkc1",
-    "Content-Type": "application/json"
-  }
-})
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("visit-counter").textContent =
-      "visits: " + data.value;
-  })
-  .catch(err => {
-    console.error(err);
-    document.getElementById("visit-counter").textContent =
-      "visits: (error)";
-  });
-</script>
 
 
 
