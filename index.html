@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>philthy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      padding: 32px;
+      background: #000;
+      color: #fff;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 720px;
+    }
+
+    .title {
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+
+    .track {
+      margin-bottom: 6px;
+    }
+
+    .player {
+      display: none;
+      margin-bottom: 14px;
+    }
+
+    audio {
+      width: 100%;
+      height: 28px;
+      background: #000;
+      filter: invert(1) grayscale(1);
+    }
+
+    audio::-webkit-media-controls-panel {
+      background: #000;
+    }
+
+    audio::-webkit-media-controls-play-button,
+    audio::-webkit-media-controls-timeline,
+    audio::-webkit-media-controls-current-time-display,
+    audio::-webkit-media-controls-time-remaining-display,
+    audio::-webkit-media-controls-mute-button,
+    audio::-webkit-media-controls-volume-slider {
+      filter: invert(1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">philthy</div>
+
+    <div class="track"><a class="play" data-src="mixes/SORT_OF.mp3">SORT_OF.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/FLACKO_NU_GENEA.mp3">FLACKO_NU_GENEA.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/I_RAN_FANETO.mp3">I_RAN_FANETO.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/CHROMOHEAD.mp3">CHROMOHEAD.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/SUNDRESS_ARREST.mp3">SUNDRESS_ARREST.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/ON_SAKURA.mp3">ON_SAKURA.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/STAY_LOCATION.mp3">STAY_LOCATION.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/COP_LIGHTS.mp3">COP_LIGHTS.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/MEGAMAN_EMPIRE.mp3">MEGAMAN_EMPIRE.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+
+    <div class="track"><a class="play" data-src="mixes/I_LIKE_TO_STAY_HIGH.mp3">I_LIKE_TO_STAY_HIGH.mp3</a></div>
+    <div class="player"><audio controls preload="none"></audio></div>
+  </div>
+
+  <script>
+    const links = Array.from(document.querySelectorAll("a.play"));
+
+    function closeAll(except = null) {
+      links.forEach(link => {
+        if (link === except) return;
+        const player = link.parentElement.nextElementSibling;
+        if (!player) return;
+        const audio = player.querySelector("audio");
+        audio.pause();
+        audio.removeAttribute("src");
+        audio.load();
+        player.style.display = "none";
+      });
+    }
+
+    links.forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const player = link.parentElement.nextElementSibling;
+        const audio = player.querySelector("audio");
+        const open = player.style.display === "block";
+
+        if (open) {
+          audio.pause();
+          audio.removeAttribute("src");
+          audio.load();
+          player.style.display = "none";
+          return;
+        }
+
+        closeAll(link);
+        player.style.display = "block";
+        audio.src = link.dataset.src;
+        audio.play().catch(() => {});
+      });
+    });
+  </script>
+</body>
+</html>
