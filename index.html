@@ -71,11 +71,7 @@
 <div id="visit-counter">visits: …</div>
 
 <script>
-fetch("https://counterapi.dev/increment/philthy/visits", {
-  headers: {
-    Authorization: "Bearer ut_PdNcBn8GHw0twidTUJkCBwCd6eZdOYdDM4Xybkc1"
-  }
-})
+fetch("https://counterapi.dev/increment/djphilthy-github/philthy", { cache: "no-store" })
   .then(res => res.json())
   .then(data => {
     document.getElementById("visit-counter").textContent =
@@ -87,6 +83,7 @@ fetch("https://counterapi.dev/increment/philthy/visits", {
       "visits: (error)";
   });
 </script>
+
 
 
 
