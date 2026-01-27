@@ -72,21 +72,23 @@
 
 <script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 <script>
-  // v1 legacy API: no token, works on static sites
+document.addEventListener("DOMContentLoaded", () => {
   const counter = new Counter({
     version: "v1",
-    namespace: "djphilthy-github-philthy" // pick any unique string, keep it consistent
+    namespace: "djphilthy-github-philthy"
   });
 
-  counter.hit("visits")
-    .then((value) => {
-      document.getElementById("visit-counter").textContent = "visits: " + value;
+  counter.up("visits")
+    .then(result => {
+      document.getElementById("visit-counter").textContent = "visits: " + result.value;
     })
-    .catch((err) => {
-      console.error("Counter error:", err);
+    .catch(error => {
+      console.error("Counter error:", error);
       document.getElementById("visit-counter").textContent = "visits: (error)";
     });
+});
 </script>
+
 
 
 
