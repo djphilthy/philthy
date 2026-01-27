@@ -3,6 +3,17 @@
 <head>
   <meta charset="utf-8">
   <title>philthy</title>
+  <div id="visit-counter">Visits: …</div>
+
+<script>
+fetch("https://api.countapi.xyz/hit/philthy.site/visits")
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("visit-counter").textContent =
+      `Visits: ${data.value}`;
+  });
+</script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
