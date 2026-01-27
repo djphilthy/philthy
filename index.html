@@ -70,19 +70,24 @@
     
 <div id="visit-counter">visits: …</div>
 
+<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 <script>
-fetch("https://counterapi.dev/increment/djphilthy-github/philthy", { cache: "no-store" })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("visit-counter").textContent =
-      "visits: " + data.count;
-  })
-  .catch(err => {
-    console.error("Counter error:", err);
-    document.getElementById("visit-counter").textContent =
-      "visits: (error)";
+  // v1 legacy API: no token, works on static sites
+  const counter = new Counter({
+    version: "v1",
+    namespace: "djphilthy-github-philthy" // pick any unique string, keep it consistent
   });
+
+  counter.hit("visits")
+    .then((value) => {
+      document.getElementById("visit-counter").textContent = "visits: " + value;
+    })
+    .catch((err) => {
+      console.error("Counter error:", err);
+      document.getElementById("visit-counter").textContent = "visits: (error)";
+    });
 </script>
+
 
 
 
