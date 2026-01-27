@@ -71,28 +71,19 @@
 <div id="visit-counter">visits: …</div>
 
 <script>
-(async () => {
-  const el = document.getElementById("visit-counter");
-  const url = "https://api.countapi.xyz/hit/djphilthy-github-philthy/visits";
-
-  try {
-    const res = await fetch(url, { cache: "no-store" });
-    const text = await res.text();
-    console.log("Counter status:", res.status, "raw:", text);
-
-    if (!res.ok) {
-      el.textContent = "visits: (api error " + res.status + ")";
-      return;
-    }
-
-    const data = JSON.parse(text);
-    el.textContent = "visits: " + data.value;
-  } catch (err) {
-    console.log("Counter exception:", err);
-    el.textContent = "visits: (blocked)";
-  }
-})();
+fetch("https://counterapi.dev/increment/philthy/visits")
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("visit-counter").textContent =
+      "visits: " + data.count;
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("visit-counter").textContent =
+      "visits: (error)";
+  });
 </script>
+
 
     
     <div class="track"><a class="play" data-src="mixes/SORT_OF.mp3">SORT_OF.mp3</a></div>
