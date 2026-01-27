@@ -70,43 +70,26 @@
     
 <div id="visit-counter">visits: …</div>
 
-<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 <script>
-(() => {
-  const el = document.getElementById("visit-counter");
-  if (!el) return;
-
-  el.textContent = "visits: (loading)";
-
-  // If it never returns, you’ll see this instead of "..."
-  const t = setTimeout(() => {
-    el.textContent = "visits: (timeout)";
-  }, 4000);
-
-  console.log("counter.js loaded?", typeof Counter);
-
-  try {
-    const counter = new Counter({
-      version: "v1",
-      namespace: "djphilthy-github-philthy"
-    });
-
-    counter.up("visits").then(result => {
-      clearTimeout(t);
-      console.log("counter result:", result);
-      el.textContent = "visits: " + result.value;
-    }).catch(err => {
-      clearTimeout(t);
-      console.error("Counter error:", err);
-      el.textContent = "visits: (error)";
-    });
-  } catch (e) {
-    clearTimeout(t);
-    console.error("Counter exception:", e);
-    el.textContent = "visits: (error)";
+fetch("https://counterapi.dev/v2/counters/philthy/visits/increment", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer ut_PdNcBn8GHw0twidTUJkCBwCd6eZdOYdDM4Xybkc1",
+    "Content-Type": "application/json"
   }
-})();
+})
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("visit-counter").textContent =
+      "visits: " + data.value;
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById("visit-counter").textContent =
+      "visits: (error)";
+  });
 </script>
+
 
 
 
