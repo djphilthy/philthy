@@ -71,18 +71,23 @@
 <div id="visit-counter">visits: …</div>
 
 <script>
-fetch("https://counterapi.dev/increment/philthy/visits")
+fetch("https://counterapi.dev/increment/philthy/visits", {
+  headers: {
+    Authorization: "Bearer ut_PdNcBn8GHw0twidTUJkCBwCd6eZdOYdDM4Xybkc1"
+  }
+})
   .then(res => res.json())
   .then(data => {
     document.getElementById("visit-counter").textContent =
       "visits: " + data.count;
   })
   .catch(err => {
-    console.error(err);
+    console.error("Counter error:", err);
     document.getElementById("visit-counter").textContent =
       "visits: (error)";
   });
 </script>
+
 
 
     
