@@ -14,12 +14,19 @@
       font-family: "Courier New", Courier, monospace;
       font-size: 16px;
       line-height: 1.6;
+      
+      /* CUSTOM CURSOR (Built-in SVG Crosshair) */
+      cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4V20M4 12H20" stroke="white" stroke-width="2"/></svg>') 12 12, auto;
+    }
+
+    /* Force cursor on clickable items too */
+    a, button, .progress-container {
+      cursor: inherit; 
     }
 
     a {
       color: #fff;
       text-decoration: none;
-      cursor: pointer;
     }
 
     a:hover {
@@ -42,12 +49,10 @@
     }
 
     /* --- NUCLEAR OPTION: HIDE DEFAULT AUDIO PLAYER --- */
-    /* This forces the browser to hide the ugly bar no matter what */
     audio {
         display: none !important;
-        width: 0 !important;
-        height: 0 !important;
         opacity: 0 !important;
+        pointer-events: none;
     }
 
     /* --- TRACK LIST STYLES --- */
@@ -64,8 +69,8 @@
 
     /* --- CUSTOM TERMINAL PLAYER UI --- */
     .custom-player {
-        display: none; /* Hidden until you click a song */
-        border: 1px solid #fff; /* White box border */
+        display: none; /* Hidden until clicked */
+        border: 1px solid #fff;
         padding: 10px;
         margin-bottom: 20px;
         background: #000;
@@ -74,7 +79,7 @@
         font-family: "Courier New", Courier, monospace;
     }
 
-    /* The [PLAY] / [STOP] Text Button */
+    /* The [PLAY] / [STOP] Button */
     .play-btn {
         background: none;
         border: none;
@@ -82,7 +87,6 @@
         font-family: inherit;
         font-size: 16px;
         font-weight: bold;
-        cursor: pointer;
         padding: 0;
         min-width: 65px;
         text-align: left;
@@ -97,20 +101,19 @@
         flex-grow: 1;
         height: 12px;
         background: #000; 
-        cursor: pointer;
         position: relative;
-        border-bottom: 1px dashed #555; /* The empty track look */
+        border-bottom: 1px dashed #555;
     }
 
-    /* The Moving Fill (Solid Block) */
+    /* The Moving Fill */
     .progress-fill {
         height: 100%;
         background: #fff;
         width: 0%;
-        border-right: 2px solid #fff; /* The "cursor" at the end of the bar */
+        border-right: 2px solid #fff; /* The "cursor" block at end of bar */
     }
 
-    /* Time Display 00:00 */
+    /* Time Display */
     .time-display {
         font-size: 14px;
         min-width: 50px;
