@@ -6,139 +6,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <style>
     /* --- CORE STYLES --- */
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
-      padding: 32px;
       background: #000;
+    }
+
+    body {
+      padding: 32px;
       color: #fff;
       font-family: "Courier New", Courier, monospace;
       font-size: 16px;
       line-height: 1.6;
-      
-      /* CUSTOM CURSOR (Built-in SVG Crosshair) */
+      /* CUSTOM CURSOR */
       cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4V20M4 12H20" stroke="white" stroke-width="2"/></svg>') 12 12, auto;
     }
 
-    /* Force cursor on clickable items too */
-    a, button, .progress-container {
-      cursor: inherit; 
-    }
+    a, button, .progress-container { cursor: inherit; }
 
-    a {
-      color: #fff;
-      text-decoration: none;
-    }
+    a { color: #fff; text-decoration: none; }
+    a:hover { text-decoration: underline; background-color: #fff; color: #000; }
 
-    a:hover {
-      text-decoration: underline;
-      background-color: #fff;
-      color: #000;
-    }
+    .container { max-width: 720px; position: relative; z-index: 10; }
+    .title { font-weight: bold; margin-bottom: 32px; font-size: 24px; letter-spacing: -1px; }
 
-    .container {
-      max-width: 720px;
-      position: relative;
-      z-index: 10;
-    }
+    audio { display: none !important; opacity: 0 !important; }
 
-    .title {
-      font-weight: bold;
-      margin-bottom: 32px;
-      font-size: 24px;
-      letter-spacing: -1px;
-    }
+    .track-wrapper { margin-bottom: 12px; }
+    .track-name { display: block; margin-bottom: 4px; font-weight: bold; font-size: 16px; }
 
-    /* --- NUCLEAR OPTION: HIDE DEFAULT AUDIO PLAYER --- */
-    audio {
-        display: none !important;
-        opacity: 0 !important;
-        pointer-events: none;
-    }
-
-    /* --- TRACK LIST STYLES --- */
-    .track-wrapper {
-        margin-bottom: 12px;
-    }
-
-    .track-name {
-        display: block;
-        margin-bottom: 4px;
-        font-weight: bold;
-        font-size: 16px;
-    }
-
-    /* --- CUSTOM TERMINAL PLAYER UI --- */
     .custom-player {
-        display: none; /* Hidden until clicked */
+        display: none;
         border: 1px solid #fff;
         padding: 10px;
         margin-bottom: 20px;
         background: #000;
         align-items: center;
         gap: 15px;
-        font-family: "Courier New", Courier, monospace;
     }
 
     .play-btn {
-        background: none;
-        border: none;
-        color: #fff;
-        font-family: inherit;
-        font-size: 16px;
-        font-weight: bold;
-        padding: 0;
-        min-width: 65px;
-        text-align: left;
-        outline: none;
+        background: none; border: none; color: #fff;
+        font-family: inherit; font-size: 16px; font-weight: bold;
+        padding: 0; min-width: 65px; text-align: left; outline: none;
     }
-    .play-btn:hover {
-        text-decoration: underline;
-    }
+    .play-btn:hover { text-decoration: underline; }
 
     .progress-container {
-        flex-grow: 1;
-        height: 12px;
-        background: #000; 
-        position: relative;
-        border-bottom: 1px dashed #555;
+        flex-grow: 1; height: 12px; background: #000;
+        position: relative; border-bottom: 1px dashed #555;
     }
 
-    .progress-fill {
-        height: 100%;
-        background: #fff;
-        width: 0%;
-        border-right: 2px solid #fff; 
-    }
+    .progress-fill { height: 100%; background: #fff; width: 0%; border-right: 2px solid #fff; }
+    .time-display { font-size: 14px; min-width: 50px; text-align: right; }
 
-    .time-display {
-        font-size: 14px;
-        min-width: 50px;
-        text-align: right;
-    }
-
-    /* --- VIDEO BACKGROUND --- */
+    /* --- FULL SCREEN VIDEO FIX --- */
     #bgVideo {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 100dvh; /* Dynamic viewport height fills whole screen on mobile */
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100dvh; /* Ignores browser bars */
         z-index: -2;
-        object-fit: cover; /* Ensures video fills screen without stretching */
+        object-fit: cover; /* No distortion, slight crop for perfect fit */
         opacity: 0;
         transition: opacity 1.5s ease;
     }
 
-    #bgVideo.visible {
-        opacity: 1;
-    }
+    #bgVideo.visible { opacity: 1; }
 
     #videoOverlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        top: 0; left: 0; right: 0; bottom: 0;
         background: rgba(0, 0, 0, 0.6);
         z-index: -1;
         pointer-events: none;
@@ -302,28 +243,20 @@
         </div>
         <audio preload="none"></audio>
     </div>
-
   </div>
 
   <script>
-    // --- VIDEO LOGIC ---
     const bgVideo = document.getElementById("bgVideo");
-    
     const videoList = [
-      "movies/Philthy Video (1).mp4",
-      "movies/Philthy Video (6).mp4",
-      "movies/Philthy Video (7).mp4",
-      "movies/Philthy Video (8).mp4",
-      "movies/Philthy Video (9).mp4",
-      "movies/Philthy Video (10).mp4",
-      "movies/Philthy Video (11).mp4",
-      "movies/Philthy Video (12).mp4"
+      "movies/Philthy Video (1).mp4", "movies/Philthy Video (6).mp4",
+      "movies/Philthy Video (7).mp4", "movies/Philthy Video (8).mp4",
+      "movies/Philthy Video (9).mp4", "movies/Philthy Video (10).mp4",
+      "movies/Philthy Video (11).mp4", "movies/Philthy Video (12).mp4"
     ];
 
     function playRandomVideo() {
-        const randomVid = videoList[Math.floor(Math.random() * videoList.length)];
-        bgVideo.src = randomVid;
-        bgVideo.play().catch(e => console.log("Video interaction required", e));
+        bgVideo.src = videoList[Math.floor(Math.random() * videoList.length)];
+        bgVideo.play().catch(e => console.log(e));
         bgVideo.classList.add("visible");
     }
 
@@ -332,16 +265,12 @@
         setTimeout(() => { bgVideo.pause(); }, 1500); 
     }
 
-    // --- AUDIO & UI LOGIC ---
     function closeAllPlayers(exceptWrapper = null) {
         document.querySelectorAll('.track-wrapper').forEach(wrapper => {
             if (wrapper === exceptWrapper) return;
             wrapper.querySelector('.custom-player').style.display = 'none';
             const audio = wrapper.querySelector('audio');
-            if(audio) {
-                audio.pause();
-                audio.currentTime = 0;
-            }
+            if(audio) { audio.pause(); audio.currentTime = 0; }
             const btn = wrapper.querySelector('.play-btn');
             if(btn) btn.innerText = "[PLAY]";
         });
@@ -366,19 +295,14 @@
         link.addEventListener('click', (e) => {
             e.preventDefault();
             if (playerUI.style.display === 'flex') {
-                audio.pause();
-                playerUI.style.display = 'none';
-                playBtn.innerText = "[PLAY]";
-                stopVideo();
+                audio.pause(); playerUI.style.display = 'none';
+                playBtn.innerText = "[PLAY]"; stopVideo();
                 return;
             }
-
             closeAllPlayers(wrapper);
             playerUI.style.display = 'flex';
-            
             if (!audio.src) audio.src = link.dataset.src;
-            audio.play();
-            playBtn.innerText = "[STOP]";
+            audio.play(); playBtn.innerText = "[STOP]";
             playRandomVideo();
 
             if ('mediaSession' in navigator) {
@@ -386,41 +310,24 @@
                     title: link.innerText.replace('.mp3', '').replace(/_/g, ' '),
                     artist: "Philthy",
                 });
-                navigator.mediaSession.setActionHandler('play', () => audio.play());
-                navigator.mediaSession.setActionHandler('pause', () => audio.pause());
             }
         });
 
         playBtn.addEventListener('click', () => {
-            if (audio.paused) {
-                audio.play();
-                playBtn.innerText = "[STOP]";
-                playRandomVideo();
-            } else {
-                audio.pause();
-                playBtn.innerText = "[PLAY]";
-                stopVideo();
-            }
+            if (audio.paused) { audio.play(); playBtn.innerText = "[STOP]"; playRandomVideo(); }
+            else { audio.pause(); playBtn.innerText = "[PLAY]"; stopVideo(); }
         });
 
         audio.addEventListener('timeupdate', () => {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            progressBar.style.width = percent + "%";
+            progressBar.style.width = (audio.currentTime / audio.duration) * 100 + "%";
             timeDisplay.innerText = formatTime(audio.currentTime);
         });
 
         progressContainer.addEventListener('click', (e) => {
-            const width = progressContainer.clientWidth;
-            const clickX = e.offsetX;
-            const duration = audio.duration;
-            audio.currentTime = (clickX / width) * duration;
+            audio.currentTime = (e.offsetX / progressContainer.clientWidth) * audio.duration;
         });
 
-        audio.addEventListener('ended', () => {
-            playBtn.innerText = "[PLAY]";
-            stopVideo();
-            progressBar.style.width = "0%";
-        });
+        audio.addEventListener('ended', () => { playBtn.innerText = "[PLAY]"; stopVideo(); });
     });
   </script>
 </body>
