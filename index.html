@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>philthy</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <style>
     /* --- CORE STYLES --- */
     body {
@@ -119,12 +119,12 @@
     /* --- VIDEO BACKGROUND --- */
     #bgVideo {
         position: fixed;
-        right: 0;
-        bottom: 0;
+        top: 0;
+        left: 0;
         width: 100vw;
-        height: 100dvh;
+        height: 100dvh; /* Dynamic viewport height fills whole screen on mobile */
         z-index: -2;
-        object-fit: cover;
+        object-fit: cover; /* Ensures video fills screen without stretching */
         opacity: 0;
         transition: opacity 1.5s ease;
     }
