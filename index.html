@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   <title>philthy</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <style>
     /* --- CORE STYLES --- */
     body {
       margin: 0;
-      padding: 32px;
+      padding: 32px; /* Keep padding for content so it doesn't hit edges */
       background: #000;
       color: #fff;
       font-family: "Courier New", Courier, monospace;
       font-size: 16px;
       line-height: 1.6;
       
-      /* CUSTOM CURSOR (Built-in SVG Crosshair) */
+      /* CUSTOM CURSOR */
       cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4V20M4 12H20" stroke="white" stroke-width="2"/></svg>') 12 12, auto;
     }
 
@@ -116,18 +116,40 @@
         text-align: right;
     }
 
-    /* --- VIDEO BACKGROUND --- */
-#bgVideo {
+    /* --- VIDEO BACKGROUND FIX FOR IPHONE --- */
+    #bgVideo {
         position: fixed;
-        /* Force bleed over the edges */
-        top: -2%; 
-        left: -2%;
-        width: 104vw;
-        height: 104dvh; 
+        top: 50%;
+        left: 50%;
+        /* This transform centers the video perfectly */
+        transform: translate(-50%, -50%);
+        
+        /* Force minimum dimensions to cover screen */
+        min-width: 100vw; 
+        min-height: 100vh;
+        
+        /* Ensure it covers even if aspect ratio is weird */
+        width: auto;
+        height: auto;
+        
         z-index: -2;
         object-fit: cover;
         opacity: 0;
         transition: opacity 1.5s ease;
+    }
+
+    /* Media query to force fill on very wide or very tall screens */
+    @media (min-aspect-ratio: 16/9) {
+        #bgVideo {
+            width: 100vw;
+            height: auto;
+        }
+    }
+    @media (max-aspect-ratio: 16/9) {
+        #bgVideo {
+            width: auto;
+            height: 100vh;
+        }
     }
 
     #bgVideo.visible {
