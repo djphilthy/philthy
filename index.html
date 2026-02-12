@@ -117,12 +117,13 @@
     }
 
     /* --- VIDEO BACKGROUND --- */
-    #bgVideo {
+#bgVideo {
         position: fixed;
-        right: 0;
-        bottom: 0;
-        width: 100vw;
-        height: 100dvh;
+        /* Force bleed over the edges */
+        top: -2%; 
+        left: -2%;
+        width: 104vw;
+        height: 104dvh; 
         z-index: -2;
         object-fit: cover;
         opacity: 0;
