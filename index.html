@@ -41,6 +41,15 @@
       letter-spacing: -1px;
     }
 
+    /* --- NUCLEAR OPTION: HIDE DEFAULT AUDIO PLAYER --- */
+    /* This forces the browser to hide the ugly bar no matter what */
+    audio {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        opacity: 0 !important;
+    }
+
     /* --- TRACK LIST STYLES --- */
     .track-wrapper {
         margin-bottom: 12px;
@@ -50,52 +59,55 @@
         display: block;
         margin-bottom: 4px;
         font-weight: bold;
+        font-size: 16px;
     }
 
-    /* --- CUSTOM TERMINAL PLAYER --- */
+    /* --- CUSTOM TERMINAL PLAYER UI --- */
     .custom-player {
-        display: none; /* Hidden by default */
-        border: 1px solid #fff;
-        padding: 8px 12px;
-        margin-bottom: 24px;
+        display: none; /* Hidden until you click a song */
+        border: 1px solid #fff; /* White box border */
+        padding: 10px;
+        margin-bottom: 20px;
         background: #000;
         align-items: center;
-        gap: 12px;
+        gap: 15px;
         font-family: "Courier New", Courier, monospace;
     }
 
-    /* The [PLAY] / [STOP] Button */
+    /* The [PLAY] / [STOP] Text Button */
     .play-btn {
         background: none;
         border: none;
         color: #fff;
         font-family: inherit;
         font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
         padding: 0;
-        min-width: 60px;
+        min-width: 65px;
         text-align: left;
+        outline: none;
     }
     .play-btn:hover {
         text-decoration: underline;
     }
 
-    /* The Progress Bar Container */
+    /* The Progress Bar Line */
     .progress-container {
         flex-grow: 1;
-        height: 14px;
-        background: #333; /* Dark grey track */
+        height: 12px;
+        background: #000; 
         cursor: pointer;
         position: relative;
-        border: 1px solid #fff;
+        border-bottom: 1px dashed #555; /* The empty track look */
     }
 
-    /* The Moving Fill */
+    /* The Moving Fill (Solid Block) */
     .progress-fill {
         height: 100%;
         background: #fff;
         width: 0%;
-        transition: width 0.1s linear; /* Smooth movement */
+        border-right: 2px solid #fff; /* The "cursor" at the end of the bar */
     }
 
     /* Time Display 00:00 */
@@ -148,9 +160,7 @@
         <a class="track-name" data-src="mixes/ORDON U GET.mp3">ORDON U GET.mp3</a>
         <div class="custom-player">
             <button class="play-btn">[PLAY]</button>
-            <div class="progress-container">
-                <div class="progress-fill"></div>
-            </div>
+            <div class="progress-container"><div class="progress-fill"></div></div>
             <span class="time-display">00:00</span>
         </div>
         <audio preload="none"></audio> 
@@ -271,6 +281,7 @@
   <script>
     // --- VIDEO LOGIC ---
     const bgVideo = document.getElementById("bgVideo");
+    // Ensure these match your actual filenames exactly!
     const videoList = [
       "movies/IMG_6972.mp4",
       "movies/IMG_6980.mp4",
@@ -280,6 +291,7 @@
     function playRandomVideo() {
         const randomVid = videoList[Math.floor(Math.random() * videoList.length)];
         bgVideo.src = randomVid;
+        // The catch prevents errors if user hasn't interacted with page yet
         bgVideo.play().catch(e => console.log("Video play failed", e));
         bgVideo.classList.add("visible");
     }
@@ -291,7 +303,7 @@
 
     // --- AUDIO & UI LOGIC ---
 
-    // Helper: Close all other players
+    // 1. Close all other players when opening a new one
     function closeAllPlayers(exceptWrapper = null) {
         document.querySelectorAll('.track-wrapper').forEach(wrapper => {
             if (wrapper === exceptWrapper) return;
@@ -312,7 +324,7 @@
         });
     }
 
-    // Helper: Format Seconds into MM:SS
+    // 2. Format Seconds into MM:SS
     function formatTime(seconds) {
         if (!seconds || isNaN(seconds)) return "00:00";
         const m = Math.floor(seconds / 60);
@@ -320,7 +332,7 @@
         return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    // Main Logic Loop
+    // 3. Main Loop: Attach logic to every track
     document.querySelectorAll('.track-wrapper').forEach(wrapper => {
         const link = wrapper.querySelector('.track-name');
         const playerUI = wrapper.querySelector('.custom-player');
@@ -330,11 +342,11 @@
         const timeDisplay = wrapper.querySelector('.time-display');
         const audio = wrapper.querySelector('audio');
 
-        // 1. LINK CLICK: Open Player & Start
+        // CLICKING THE SONG TITLE
         link.addEventListener('click', (e) => {
             e.preventDefault();
             
-            // If already open, just toggle close
+            // If already open, close it (toggle behavior)
             if (playerUI.style.display === 'flex') {
                 audio.pause();
                 playerUI.style.display = 'none';
@@ -343,26 +355,27 @@
                 return;
             }
 
-            // Close others, Open this one
+            // Otherwise, switch to this song
             closeAllPlayers(wrapper);
-            playerUI.style.display = 'flex';
+            playerUI.style.display = 'flex'; // SHOW THE CUSTOM PLAYER
             
-            // Set Source & Play
             if (!audio.src) audio.src = link.dataset.src;
             audio.play();
-            playBtn.innerText = "[STOP]"; // Playing state
+            playBtn.innerText = "[STOP]";
             playRandomVideo();
 
-            // Set Lock Screen Info
+            // Phone Lock Screen Info
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: link.innerText.replace('.mp3', ''),
                     artist: "Philthy",
                 });
+                navigator.mediaSession.setActionHandler('play', () => audio.play());
+                navigator.mediaSession.setActionHandler('pause', () => audio.pause());
             }
         });
 
-        // 2. PLAY BUTTON CLICK: Toggle Play/Pause
+        // CLICKING THE [PLAY]/[STOP] BUTTON
         playBtn.addEventListener('click', () => {
             if (audio.paused) {
                 audio.play();
@@ -375,14 +388,14 @@
             }
         });
 
-        // 3. PROGRESS BAR LOGIC (Visual Update)
+        // PROGRESS BAR UPDATING (Moves as song plays)
         audio.addEventListener('timeupdate', () => {
             const percent = (audio.currentTime / audio.duration) * 100;
             progressBar.style.width = percent + "%";
             timeDisplay.innerText = formatTime(audio.currentTime);
         });
 
-        // 4. CLICKABLE PROGRESS BAR (Seeking)
+        // SEEKING (Clicking on the bar)
         progressContainer.addEventListener('click', (e) => {
             const width = progressContainer.clientWidth;
             const clickX = e.offsetX;
@@ -390,13 +403,11 @@
             audio.currentTime = (clickX / width) * duration;
         });
 
-        // 5. AUDIO ENDED
+        // SONG ENDS
         audio.addEventListener('ended', () => {
             playBtn.innerText = "[PLAY]";
             stopVideo();
             progressBar.style.width = "0%";
-            // Optional: Close player automatically? 
-            // playerUI.style.display = 'none'; 
         });
     });
   </script>
