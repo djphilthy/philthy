@@ -5,6 +5,7 @@
   <title>philthy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    /* --- CORE STYLES --- */
     body {
       margin: 0;
       padding: 32px;
@@ -23,47 +24,88 @@
 
     a:hover {
       text-decoration: underline;
+      background-color: #fff;
+      color: #000;
     }
 
     .container {
       max-width: 720px;
       position: relative;
-      z-index: 10; /* Keeps text above video */
+      z-index: 10;
     }
 
     .title {
       font-weight: bold;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
+      font-size: 24px;
+      letter-spacing: -1px;
     }
 
-    .track {
-      margin-bottom: 6px;
+    /* --- TRACK LIST STYLES --- */
+    .track-wrapper {
+        margin-bottom: 12px;
     }
 
-    .player {
-      display: none;
-      margin-bottom: 14px;
+    .track-name {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: bold;
     }
 
-    audio {
-      width: 100%;
-      height: 28px;
-      background: #000;
-      filter: invert(1) grayscale(1);
+    /* --- CUSTOM TERMINAL PLAYER --- */
+    .custom-player {
+        display: none; /* Hidden by default */
+        border: 1px solid #fff;
+        padding: 8px 12px;
+        margin-bottom: 24px;
+        background: #000;
+        align-items: center;
+        gap: 12px;
+        font-family: "Courier New", Courier, monospace;
     }
 
-    /* Invert colors for audio player controls to match aesthetic */
-    audio::-webkit-media-controls-panel { background: #000; }
-    audio::-webkit-media-controls-play-button,
-    audio::-webkit-media-controls-timeline,
-    audio::-webkit-media-controls-current-time-display,
-    audio::-webkit-media-controls-time-remaining-display,
-    audio::-webkit-media-controls-mute-button,
-    audio::-webkit-media-controls-volume-slider {
-      filter: invert(1);
+    /* The [PLAY] / [STOP] Button */
+    .play-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        font-family: inherit;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 0;
+        min-width: 60px;
+        text-align: left;
+    }
+    .play-btn:hover {
+        text-decoration: underline;
     }
 
-    /* --- VIDEO BACKGROUND STYLES --- */
+    /* The Progress Bar Container */
+    .progress-container {
+        flex-grow: 1;
+        height: 14px;
+        background: #333; /* Dark grey track */
+        cursor: pointer;
+        position: relative;
+        border: 1px solid #fff;
+    }
+
+    /* The Moving Fill */
+    .progress-fill {
+        height: 100%;
+        background: #fff;
+        width: 0%;
+        transition: width 0.1s linear; /* Smooth movement */
+    }
+
+    /* Time Display 00:00 */
+    .time-display {
+        font-size: 14px;
+        min-width: 50px;
+        text-align: right;
+    }
+
+    /* --- VIDEO BACKGROUND --- */
     #bgVideo {
         position: fixed;
         right: 0;
@@ -72,13 +114,10 @@
         min-height: 100%;
         width: auto;
         height: auto;
-        z-index: -2;          /* Behind everything */
-        
-        /* FIT SETTING: Change 'cover' to 'contain' if you want to see the whole video with black bars */
-        object-fit: cover;    
-        
-        opacity: 0;           /* Start hidden (black) */
-        transition: opacity 1.5s ease; /* Smooth fade over 1.5 seconds */
+        z-index: -2;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 1.5s ease;
     }
 
     #bgVideo.visible {
@@ -91,9 +130,9 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.6); /* 60% Darkness overlay to make text readable */
-        z-index: -1;          /* Between video and text */
-        pointer-events: none; /* Click-through allowed */
+        background: rgba(0, 0, 0, 0.6);
+        z-index: -1;
+        pointer-events: none;
     }
   </style>
 </head>
@@ -103,53 +142,135 @@
   <div id="videoOverlay"></div>
 
   <div class="container">
-    <div class="title">philthy</div>
+    <div class="title">philthy_terminal_v1</div>
 
-    <div class="track"><a class="play" data-src="mixes/ORDON U GET.mp3">ORDON U GET.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/ORDON U GET.mp3">ORDON U GET.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container">
+                <div class="progress-fill"></div>
+            </div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio> 
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/HILLBILLY HEART.mp3">HILLBILLY HEART.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/HILLBILLY HEART.mp3">HILLBILLY HEART.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/SORT_OF.mp3">SORT_OF.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/SORT_OF.mp3">SORT_OF.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/FLACKO_NU_GENEA.mp3">FLACKO_NU_GENEA.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/FLACKO_NU_GENEA.mp3">FLACKO_NU_GENEA.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/I_RAN_FANETO.mp3">I_RAN_FANETO.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/I_RAN_FANETO.mp3">I_RAN_FANETO.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/CHROMOHEAD.mp3">CHROMOHEAD.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/CHROMOHEAD.mp3">CHROMOHEAD.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/SUNDRESS_ARREST.mp3">SUNDRESS_ARREST.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/SUNDRESS_ARREST.mp3">SUNDRESS_ARREST.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/ON_SAKURA.mp3">ON_SAKURA.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/ON_SAKURA.mp3">ON_SAKURA.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/STAY_LOCATION.mp3">STAY_LOCATION.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/STAY_LOCATION.mp3">STAY_LOCATION.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/COP_LIGHTS.mp3">COP_LIGHTS.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/COP_LIGHTS.mp3">COP_LIGHTS.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/MEGAMAN_EMPIRE.mp3">MEGAMAN_EMPIRE.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/MEGAMAN_EMPIRE.mp3">MEGAMAN_EMPIRE.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
 
-    <div class="track"><a class="play" data-src="mixes/I_LIKE_TO_STAY_HIGH.mp3">I_LIKE_TO_STAY_HIGH.mp3</a></div>
-    <div class="player"><audio controls preload="none"></audio></div>
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/I_LIKE_TO_STAY_HIGH.mp3">I_LIKE_TO_STAY_HIGH.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio>
+    </div>
+
   </div>
 
   <script>
-    const links = Array.from(document.querySelectorAll("a.play"));
-    const allAudios = Array.from(document.querySelectorAll("audio"));
-    
-    // --- VIDEO SETUP ---
+    // --- VIDEO LOGIC ---
     const bgVideo = document.getElementById("bgVideo");
-    
-    // Your video files must be in a folder named 'movies'
     const videoList = [
       "movies/IMG_6972.mp4",
       "movies/IMG_6980.mp4",
@@ -157,93 +278,126 @@
     ];
 
     function playRandomVideo() {
-        // Pick a random video from the list
         const randomVid = videoList[Math.floor(Math.random() * videoList.length)];
         bgVideo.src = randomVid;
-        bgVideo.play();
-        bgVideo.classList.add("visible"); // Start fade in
+        bgVideo.play().catch(e => console.log("Video play failed", e));
+        bgVideo.classList.add("visible");
     }
 
     function stopVideo() {
-        bgVideo.classList.remove("visible"); // Start fade out
-        // Pause video after fade completes (1.5s) to save resources
-        setTimeout(() => {
-            bgVideo.pause();
-        }, 1500); 
+        bgVideo.classList.remove("visible");
+        setTimeout(() => { bgVideo.pause(); }, 1500); 
     }
 
-    // --- AUDIO & MEDIA SESSION SETUP ---
+    // --- AUDIO & UI LOGIC ---
 
-    function closeAll(except = null) {
-      links.forEach(link => {
-        if (link === except) return;
-        const player = link.parentElement.nextElementSibling;
-        if (!player) return;
-        const audio = player.querySelector("audio");
-        audio.pause();
-        audio.removeAttribute("src");
-        audio.load();
-        player.style.display = "none";
-      });
-    }
-
-    links.forEach(link => {
-      // Setup the audio player next to the link
-      const player = link.parentElement.nextElementSibling;
-      const audio = player.querySelector("audio");
-
-      // 1. Listen for when the song naturally ends
-      audio.onended = () => {
-          stopVideo(); // Fade out video
-          audio.removeAttribute("src");
-          audio.load();
-          player.style.display = "none";
-      };
-
-      // 2. Handle Clicks
-      link.addEventListener("click", e => {
-        e.preventDefault();
-        const open = player.style.display === "block";
-
-        if (open) {
-          // PAUSE ACTION
-          stopVideo(); // Fade out video
-          audio.pause();
-          audio.removeAttribute("src");
-          audio.load();
-          player.style.display = "none";
-          return;
-        }
-
-        // PLAY ACTION
-        closeAll(link);
-        player.style.display = "block";
-        audio.src = link.dataset.src;
-        
-        // Play both audio and video
-        audio.play().catch(() => {});
-        playRandomVideo();
-
-        // 3. SET LOCK SCREEN INFO (Media Session API)
-        if ('mediaSession' in navigator) {
-            // Clean up the text: "SONG NAME.mp3" -> "SONG NAME"
-            const cleanTitle = link.innerText.replace('.mp3', '');
+    // Helper: Close all other players
+    function closeAllPlayers(exceptWrapper = null) {
+        document.querySelectorAll('.track-wrapper').forEach(wrapper => {
+            if (wrapper === exceptWrapper) return;
             
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: cleanTitle,
-                artist: "Philthy",
-                // Album art omitted as requested
-            });
-
-            // Add standard lock screen controls
-            navigator.mediaSession.setActionHandler('play', () => audio.play());
-            navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-            navigator.mediaSession.setActionHandler('stop', () => {
+            // Hide UI
+            wrapper.querySelector('.custom-player').style.display = 'none';
+            
+            // Reset Audio
+            const audio = wrapper.querySelector('audio');
+            if(audio) {
                 audio.pause();
+                audio.currentTime = 0;
+            }
+            
+            // Reset Buttons
+            const btn = wrapper.querySelector('.play-btn');
+            if(btn) btn.innerText = "[PLAY]";
+        });
+    }
+
+    // Helper: Format Seconds into MM:SS
+    function formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return "00:00";
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    // Main Logic Loop
+    document.querySelectorAll('.track-wrapper').forEach(wrapper => {
+        const link = wrapper.querySelector('.track-name');
+        const playerUI = wrapper.querySelector('.custom-player');
+        const playBtn = wrapper.querySelector('.play-btn');
+        const progressBar = wrapper.querySelector('.progress-fill');
+        const progressContainer = wrapper.querySelector('.progress-container');
+        const timeDisplay = wrapper.querySelector('.time-display');
+        const audio = wrapper.querySelector('audio');
+
+        // 1. LINK CLICK: Open Player & Start
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // If already open, just toggle close
+            if (playerUI.style.display === 'flex') {
+                audio.pause();
+                playerUI.style.display = 'none';
+                playBtn.innerText = "[PLAY]";
                 stopVideo();
-            });
-        }
-      });
+                return;
+            }
+
+            // Close others, Open this one
+            closeAllPlayers(wrapper);
+            playerUI.style.display = 'flex';
+            
+            // Set Source & Play
+            if (!audio.src) audio.src = link.dataset.src;
+            audio.play();
+            playBtn.innerText = "[STOP]"; // Playing state
+            playRandomVideo();
+
+            // Set Lock Screen Info
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: link.innerText.replace('.mp3', ''),
+                    artist: "Philthy",
+                });
+            }
+        });
+
+        // 2. PLAY BUTTON CLICK: Toggle Play/Pause
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerText = "[STOP]";
+                playRandomVideo();
+            } else {
+                audio.pause();
+                playBtn.innerText = "[PLAY]";
+                stopVideo();
+            }
+        });
+
+        // 3. PROGRESS BAR LOGIC (Visual Update)
+        audio.addEventListener('timeupdate', () => {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = percent + "%";
+            timeDisplay.innerText = formatTime(audio.currentTime);
+        });
+
+        // 4. CLICKABLE PROGRESS BAR (Seeking)
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        });
+
+        // 5. AUDIO ENDED
+        audio.addEventListener('ended', () => {
+            playBtn.innerText = "[PLAY]";
+            stopVideo();
+            progressBar.style.width = "0%";
+            // Optional: Close player automatically? 
+            // playerUI.style.display = 'none'; 
+        });
     });
   </script>
 </body>
