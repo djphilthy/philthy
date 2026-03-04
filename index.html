@@ -14,12 +14,9 @@
       font-family: "Courier New", Courier, monospace;
       font-size: 16px;
       line-height: 1.6;
-      
-      /* CUSTOM CURSOR (Built-in SVG Crosshair) */
       cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4V20M4 12H20" stroke="white" stroke-width="2"/></svg>') 12 12, auto;
     }
 
-    /* Force cursor on clickable items too */
     a, button, .progress-container {
       cursor: inherit; 
     }
@@ -46,19 +43,17 @@
     }
 
     .title img {
-      max-width: 150px; /* Reduced to 50% of the previous 300px */
+      max-width: 150px;
       height: auto;
       display: block;
     }
 
-    /* --- NUCLEAR OPTION: HIDE DEFAULT AUDIO PLAYER --- */
     audio {
         display: none !important;
         opacity: 0 !important;
         pointer-events: none;
     }
 
-    /* --- TRACK LIST STYLES --- */
     .track-wrapper {
         margin-bottom: 12px;
     }
@@ -70,9 +65,8 @@
         font-size: 16px;
     }
 
-    /* --- CUSTOM TERMINAL PLAYER UI --- */
     .custom-player {
-        display: none; /* Hidden until clicked */
+        display: none; 
         border: 1px solid #fff;
         padding: 10px;
         margin-bottom: 20px;
@@ -119,7 +113,6 @@
         text-align: right;
     }
 
-    /* --- VIDEO BACKGROUND --- */
     #bgVideo {
         position: fixed;
         right: 0;
@@ -159,7 +152,7 @@
     </div>
 
     <div class="track-wrapper">
-        <a class="track-name" data-src="mixes/ORDON_U_GET.mp3">ORDON_U_GET.mp3</a>
+        <a class="track-name" data-src="mixes/42_REMOVER.mp3">42_REMOVER.mp3</a>
         <div class="custom-player">
             <button class="play-btn">[PLAY]</button>
             <div class="progress-container"><div class="progress-fill"></div></div>
@@ -169,13 +162,33 @@
     </div>
 
     <div class="track-wrapper">
-        <a class="track-name" data-src="mixes/HILLBILLY_HEART.mp3">HILLBILLY_HEART.mp3</a>
+        <a class="track-name" data-src="mixes/BIRDS_ON_RESO.mp3">BIRDS_ON_RESO.mp3</a>
         <div class="custom-player">
             <button class="play-btn">[PLAY]</button>
             <div class="progress-container"><div class="progress-fill"></div></div>
             <span class="time-display">00:00</span>
         </div>
-        <audio preload="none"></audio>
+        <audio preload="none"></audio> 
+    </div>
+
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/ID_LIKE_100K.mp3">ID_LIKE_100K.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio> 
+    </div>
+
+    <div class="track-wrapper">
+        <a class="track-name" data-src="mixes/ORDON_U_GET.mp3">ORDON_U_GET.mp3</a>
+        <div class="custom-player">
+            <button class="play-btn">[PLAY]</button>
+            <div class="progress-container"><div class="progress-fill"></div></div>
+            <span class="time-display">00:00</span>
+        </div>
+        <audio preload="none"></audio> 
     </div>
 
     <div class="track-wrapper">
@@ -298,20 +311,9 @@
         <audio preload="none"></audio>
     </div>
 
-    <div class="track-wrapper">
-        <a class="track-name" data-src="mixes/TWO_TWO_HIII.mp3">TWO_TWO_HIII.mp3</a>
-        <div class="custom-player">
-            <button class="play-btn">[PLAY]</button>
-            <div class="progress-container"><div class="progress-fill"></div></div>
-            <span class="time-display">00:00</span>
-        </div>
-        <audio preload="none"></audio>
-    </div>
-
   </div>
 
   <script>
-    // --- VIDEO LOGIC ---
     const bgVideo = document.getElementById("bgVideo");
     
     const videoList = [
@@ -337,7 +339,6 @@
         setTimeout(() => { bgVideo.pause(); }, 1500); 
     }
 
-    // --- AUDIO & UI LOGIC ---
     function closeAllPlayers(exceptWrapper = null) {
         document.querySelectorAll('.track-wrapper').forEach(wrapper => {
             if (wrapper === exceptWrapper) return;
